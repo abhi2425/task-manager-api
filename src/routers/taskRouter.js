@@ -4,7 +4,10 @@ const auth = require("../middleware/auth");
 const router = new express.Router();
 module.exports = router;
 
-router.post("/tasks", auth, async ({ body, user }, res) => {
+router.post("/tasks", auth, async ({
+  body,
+  user
+}, res) => {
   //const task = new Tasks(req.body);
   const task = new Tasks({
     ...body,
@@ -29,24 +32,24 @@ router.get("/tasks", auth, async (req, res) => {
     // res.send(req.user.tasks);
 
     //3rd Way
-    const match = {};
-    if (req.query.completed) {
-      match.completed = req.query.completed === "true";
-    }
-    const sort = {};
-    if (req.query.sortBy) {
-      const part = req.query.sortBy.split("_");
-      sort[part[0]] = part[1] === "desc" ? -1 : 1;
-    }
+    // const match = {};
+    // if (req.query.completed) {
+    //   match.completed = req.query.completed === "true";
+    // }
+    // const sort = {};
+    // if (req.query.sortBy) {
+    //   const part = req.query.sortBy.split("_");
+    //   sort[part[0]] = part[1] === "desc" ? -1 : 1;
+    // }
     await req.user
       .populate({
         path: "tasks",
-        match,
-        options: {
-          limit: +req.query.limit,
-          skip: +req.query.skip,
-          sort,
-        },
+        //   match,
+        // options: {
+        //   limit: +req.query.limit,
+        //   skip: +req.query.skip,
+        //   sort,
+        // },
       })
       .execPopulate();
     res.send(req.user.tasks);
@@ -62,13 +65,18 @@ router.get("/tasks/:id", auth, async (req, res) => {
   const _id = req.params.id;
   try {
     // const task = await Tasks.findById(_id);
-    const task = await Tasks.findOne({ _id, owner: req.user._id });
+    const task = await Tasks.findOne({
+      _id,
+      owner: req.user._id
+    });
     if (!task) {
       return res.status(404).send();
     }
     res.status(200).send(task);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({
+      error: error.message
+    });
   }
 });
 
@@ -92,7 +100,10 @@ router.patch("/tasks/:id", auth, async (req, res) => {
   }
   const _id = req.params.id;
   try {
-    const task = await Tasks.findOne({ _id, owner: req.user._id });
+    const task = await Tasks.findOne({
+      _id,
+      owner: req.user._id
+    });
     //const task = await Tasks.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true })
     if (!task) {
       return res.status(404).send();
