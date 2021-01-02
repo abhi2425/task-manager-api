@@ -7,4 +7,4 @@ mongoose
     useUnifiedTopology: true,
     useFindAndModify: false,
   })
-  .then(() => console.log("Connected To Database!!"));
+  .then(() => console.log("Connected To Database!!")).catch(error => console.log(error.message))
