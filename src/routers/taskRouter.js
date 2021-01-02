@@ -32,24 +32,24 @@ router.get("/tasks", auth, async (req, res) => {
     // res.send(req.user.tasks);
 
     //3rd Way
-    // const match = {};
-    // if (req.query.completed) {
-    //   match.completed = req.query.completed === "true";
-    // }
-    // const sort = {};
-    // if (req.query.sortBy) {
-    //   const part = req.query.sortBy.split("_");
-    //   sort[part[0]] = part[1] === "desc" ? -1 : 1;
-    // }
+    const match = {};
+    if (req.query.completed) {
+      match.completed = req.query.completed === "true";
+    }
+    const sort = {};
+    if (req.query.sortBy) {
+      const part = req.query.sortBy.split("_");
+      sort[part[0]] = part[1] === "desc" ? -1 : 1;
+    }
     await req.user
       .populate({
         path: "tasks",
-        //   match,
-        // options: {
-        //   limit: +req.query.limit,
-        //   skip: +req.query.skip,
-        //   sort,
-        // },
+        match,
+        options: {
+          limit: +req.query.limit,
+          skip: +req.query.skip,
+          sort,
+        },
       })
       .execPopulate();
     res.send(req.user.tasks);
