@@ -11,7 +11,6 @@ module.exports = router;
 //signing User
 router.post("/users", async (req, res) => {
   const user = new Users(req.body);
-  console.log(req.body);
   const message = `Welcome ${user.name} to Task Manger Api. Let me know your Experience with api`;
   try {
     await user.save();
