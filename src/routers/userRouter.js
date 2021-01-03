@@ -2,23 +2,24 @@ const express = require("express");
 const Users = require("../models/users");
 const auth = require("../middleware/auth");
 const multer = require("multer");
-const sharp = require("sharp")
+const sharp = require("sharp");
 const User = require("../models/users");
-const sendEmail = require("../account/account")
+const sendEmail = require("../account/account");
 const router = new express.Router();
 module.exports = router;
 
 //signing User
 router.post("/users", async (req, res) => {
   const user = new Users(req.body);
-  const message = `Welcome ${user.name} to Task Manger Api. Let me know your Experience with api`
+  console.log(req.body);
+  const message = `Welcome ${user.name} to Task Manger Api. Let me know your Experience with api`;
   try {
     await user.save();
-    sendEmail(user.email, message)
+    sendEmail(user.email, message);
     const token = await user.getAuthToken();
     res.status(201).send({
       user,
-      token
+      token,
     }); //automatically calls JSON.Stringify()
   } catch (error) {
     res.status(400).send("Error!! " + error);
@@ -80,10 +81,7 @@ router.get("/users/me", auth, (req, res) => {
   res.send(req.user);
 });
 
-router.patch("/users/me", auth, async ({
-  body,
-  user
-}, res) => {
+router.patch("/users/me", auth, async ({ body, user }, res) => {
   const userUpdates = Object.keys(body);
   const allowedUpdates = ["name", "age", "email", "password"];
   const isValidUpdate = userUpdates.every((updates) =>
@@ -111,16 +109,17 @@ router.patch("/users/me", auth, async ({
     res.status(200).send(user);
   } catch (error) {
     res.status(500).send({
-      error: "error!!" + error.message
+      error: "error!!" + error.message,
     });
   }
 });
 
 router.delete("/users/me", auth, async (req, res) => {
   try {
-    const message = "Thanks for Using my app. Please let us Know what we are lacking "
+    const message =
+      "Thanks for Using my app. Please let us Know what we are lacking ";
     const user = await req.user.remove();
-    sendEmail(user.email, message)
+    sendEmail(user.email, message);
     res.send(user);
   } catch (error) {
     res.status(500).send();
@@ -143,40 +142,43 @@ router.post(
   auth,
   upload.single("avatar"),
   async (req, res) => {
-      const buffer = await sharp(req.file.buffer).png().resize({
+    const buffer = await sharp(req.file.buffer)
+      .png()
+      .resize({
         width: 400,
-        height: 400
-      }).toBuffer()
-      req.user.avatar = buffer;
-      await req.user.save();
-      res.status(200).send({
-        message: "FileUploaded",
-      });
-    },
-    (error, _, res, next) => {
-      res.status(400).send({
-        error: error.message,
-      });
-    }
+        height: 400,
+      })
+      .toBuffer();
+    req.user.avatar = buffer;
+    await req.user.save();
+    res.status(200).send({
+      message: "FileUploaded",
+    });
+  },
+  (error, _, res, next) => {
+    res.status(400).send({
+      error: error.message,
+    });
+  }
 );
-router.get('/users/:id/avatar', async (req, res) => {
+router.get("/users/:id/avatar", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id)
+    const user = await User.findById(req.params.id);
     if (!user || !user.avatar) {
-      throw new Error("Image Not Found!")
+      throw new Error("Image Not Found!");
     }
-    res.set("Content-Type", 'image/png')
-    res.status(200).send(user.avatar)
+    res.set("Content-Type", "image/png");
+    res.status(200).send(user.avatar);
   } catch (error) {
     res.send({
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
-router.delete('/users/me/avatar', auth, async (req, res) => {
-  req.user.avatar = undefined
-  await req.user.save()
+});
+router.delete("/users/me/avatar", auth, async (req, res) => {
+  req.user.avatar = undefined;
+  await req.user.save();
   res.status(200).send({
-    message: "Image Deleted"
-  })
-})
+    message: "Image Deleted",
+  });
+});
