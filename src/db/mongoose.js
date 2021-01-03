@@ -1,4 +1,4 @@
-require('dotenv').config()
+require("dotenv").config();
 const mongoose = require("mongoose");
 mongoose
   .connect(process.env.MONGODB_URL, {
@@ -7,4 +7,5 @@ mongoose
     useUnifiedTopology: true,
     useFindAndModify: false,
   })
-  .then(() => console.log("Connected To Database!!")).catch(error => console.log(error.message))
+  .then(() => console.log("Connected To Database!!"))
+  .catch((error) => console.log(error.message));

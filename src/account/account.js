@@ -1,22 +1,25 @@
-require("dotenv").config()
-const nodemailer = require("nodemailer")
+require("dotenv").config();
+const nodemailer = require("nodemailer");
 
 const sendEmail = (email, message) => {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.USER_MAIL,
-            pass: process.env.PASS
-        }
-    });
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.USER_MAIL,
+      pass: process.env.PASS,
+    },
+  });
 
-    const mailOptions = {
-        from: 'abhiinvirtuallife@gmail.com',
-        to: email,
-        subject: "Thanks For Joining In",
-        text: message
-    };
+  const mailOptions = {
+    from: "abhiinvirtuallife@gmail.com",
+    to: email,
+    subject: "Thanks For Joining In",
+    text: message,
+  };
 
-    transporter.sendMail(mailOptions)
-}
-module.exports = sendEmail
+  transporter
+    .sendMail(mailOptions)
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
+};
+module.exports = sendEmail;
