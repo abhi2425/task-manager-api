@@ -6,6 +6,7 @@ module.exports = router;
 
 router.post("/tasks", auth, async ({ body, user }, res) => {
   //const task = new Tasks(req.body);
+  console.log(body);
   const task = new Tasks({
     ...body,
     owner: user._id,
