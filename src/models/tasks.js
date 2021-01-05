@@ -27,7 +27,7 @@ const taskSchema = new mongoose.Schema(
     // },
     orders: [
       {
-        projects: {
+        products: {
           type: Object,
           required: true,
         },
