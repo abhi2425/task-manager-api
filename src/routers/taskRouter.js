@@ -4,10 +4,7 @@ const auth = require("../middleware/auth");
 const router = new express.Router();
 module.exports = router;
 
-router.post("/tasks", auth, async ({
-  body,
-  user
-}, res) => {
+router.post("/tasks", auth, async ({ body, user }, res) => {
   //const task = new Tasks(req.body);
   const task = new Tasks({
     ...body,
@@ -67,7 +64,7 @@ router.get("/tasks/:id", auth, async (req, res) => {
     // const task = await Tasks.findById(_id);
     const task = await Tasks.findOne({
       _id,
-      owner: req.user._id
+      owner: req.user._id,
     });
     if (!task) {
       return res.status(404).send();
@@ -75,7 +72,7 @@ router.get("/tasks/:id", auth, async (req, res) => {
     res.status(200).send(task);
   } catch (error) {
     res.status(500).send({
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -102,7 +99,7 @@ router.patch("/tasks/:id", auth, async (req, res) => {
   try {
     const task = await Tasks.findOne({
       _id,
-      owner: req.user._id
+      owner: req.user._id,
     });
     //const task = await Tasks.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true })
     if (!task) {

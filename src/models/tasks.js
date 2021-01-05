@@ -3,12 +3,12 @@ const taskSchema = new mongoose.Schema(
   {
     description: {
       type: String,
-      required: true,
+      //   required: true,
       trim: true,
     },
     completed: {
       type: Boolean,
-      required: true,
+      //  required: true,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +25,14 @@ const taskSchema = new mongoose.Schema(
     //     ref: "Users",
     //   },
     // },
+    orders: [
+      {
+        projects: {
+          type: Object,
+          required: true,
+        },
+      },
+    ],
   },
   {
     timestamps: true,
