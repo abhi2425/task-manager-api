@@ -5,8 +5,6 @@ const router = new express.Router()
 module.exports = router
 
 router.post('/tasks', auth, async ({ body, user }, res) => {
-   //const task = new Tasks(req.body);
-   console.log(body)
    const task = new Tasks({
       ...body,
       owner: user._id,
@@ -15,7 +13,7 @@ router.post('/tasks', auth, async ({ body, user }, res) => {
       await task.save()
       res.status(201).send(task)
    } catch (error) {
-      res.status(400).send('Error!!' + error)
+      res.status(400).send(error.message)
    }
 })
 
@@ -62,7 +60,6 @@ router.get('/tasks', auth, async (req, res) => {
 router.get('/tasks/:id', auth, async (req, res) => {
    const _id = req.params.id
    try {
-      // const task = await Tasks.findById(_id);
       const task = await Tasks.findOne({
          _id,
          owner: req.user._id,
