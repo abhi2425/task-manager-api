@@ -1,0 +1,38 @@
+version: "3.9"
+
+name: taskmanager-api
+
+services:
+  server:
+    container_name: taskmanager_server
+    build: .
+    image: abhi2425/taskmanager-api:init
+    ports:
+      - 3000:3000
+    networks:
+      - backend    
+  database:
+    container_name: taskmanager_db
+    image: mongo:4.2.0
+    ports:
+      - 27017
+    networks:
+      - backend
+    volumes:
+      - taskdb-data:/db/data
+    env_file: .env  
+    environment:
+      USER_MAIL: ${USER_MAIL}
+      PASS: ${PASS}
+      MONGODB_URL: ${MONGODB_URL}
+      MONGODB_TEST_URL: ${MONGODB_TEST_URL}
+      SECRET_KEY: ${SECRET_KEY}
+
+networks:
+  backend:
+    name: taskmanager-net
+    driver: bridge
+
+volumes:
+  taskdb-data: 
+
